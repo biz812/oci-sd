@@ -64,22 +64,21 @@ var defaultSDConfig = SDConfig{
 
 // SDConfig is the configuration for OCI based service discovery.
 type SDConfig struct {
-	User              string
-	FingerPrint       string
-	KeyFile           string
-	PassPhrase        string `toml:",omitempty"`
-	Tenancy           string
-	Region            string
-	Compartment       string
-	InstancePrincipal bool
-	Port              int            `toml:",omitempty"`
-	RefreshInterval   model.Duration `toml:",omitempty"`
+	User            string
+	FingerPrint     string
+	KeyFile         string
+	PassPhrase      string `toml:",omitempty"`
+	Tenancy         string
+	Region          string
+	Compartment     string
+	Port            int            `toml:",omitempty"`
+	RefreshInterval model.Duration `toml:",omitempty"`
 }
 
 // Validate function validates that the SDConfig struct contains all the mandatory fields
-func (c *SDConfig) Validate() error {
-        if c.InstancePrincipal == false {
-                if c.User == "" {
+func (c *SDConfig) Validate(i bool) error {
+	if i == false {
+		if c.User == "" {
 			return fmt.Errorf("oci sd configuration requires a user")
 		}
 		if c.FingerPrint == "" {
@@ -121,18 +120,22 @@ type Discovery struct {
 }
 
 // NewDiscovery returns a new OCI discovery which periodically refreshes its targets.
-func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
-        var ociConfig common.ConfigurationProvider
+func NewDiscovery(conf *SDConfig, i bool, logger *log.Logger) (*Discovery, error) {
+	var ociConfig common.ConfigurationProvider
 	if logger == nil {
 		logger = log.New()
 	}
-	privateKey, err := loadKey(conf.KeyFile, logger)
-	if err != nil {
-		return nil, err
-	}
-        if conf.InstancePrincipal {
-                ociConfig, err = auth.InstancePrincipalConfigurationProvider()
-        } else {
+	if i == true {
+		var err error
+		ociConfig, err = auth.InstancePrincipalConfigurationProvider()
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		privateKey, err := loadKey(conf.KeyFile, logger)
+		if err != nil {
+			return nil, err
+		}
 		ociConfig = common.NewRawConfigurationProvider(
 			conf.Tenancy,
 			conf.User,
@@ -141,7 +144,7 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
 			privateKey,
 			&conf.PassPhrase,
 		)
-        }
+	}
 	return &Discovery{
 		sdConfig:  conf,
 		ociConfig: ociConfig,

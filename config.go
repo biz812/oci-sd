@@ -50,7 +50,7 @@ func parseConfig() config {
 	cfg := config{}
 	toml.Unmarshal(file, &cfg)
 
-	if err := cfg.SDConfig.Validate(); err != nil {
+	if err := cfg.SDConfig.Validate(instancePrincipal); err != nil {
 		logger.WithField("error", err).Fatal("invalid config file")
 	}
 

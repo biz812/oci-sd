@@ -55,7 +55,7 @@ func main() {
 	cfg := parseConfig()
 	ctx := context.Background()
 
-	disc, err := oci.NewDiscovery(&cfg.SDConfig, logger)
+	disc, err := oci.NewDiscovery(&cfg.SDConfig, instancePrincipal, logger)
 	if err != nil {
 		logger.WithFields(log.Fields{"func": "main", "err": err}).Fatal("can't create a discovery")
 	}
