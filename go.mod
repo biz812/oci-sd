@@ -2,8 +2,8 @@ module github.com/sw-samuraj/oci-sd
 
 require (
 	cloud.google.com/go v0.26.0 // indirect
-	github.com/Azure/azure-sdk-for-go v0.0.0-20180823151430-bd73d950fa4440dae889bd9917bff7cef539f86e // indirect
-	github.com/Azure/go-autorest v0.0.0-20180823151430-8a25372bbfec739b8719a9e3987400d15ef9e179 // indirect
+	github.com/Azure/azure-sdk-for-go v0.0.0-20161028183111-bd73d950fa44 // indirect
+	github.com/Azure/go-autorest v0.0.0-20161025180734-8a25372bbfec // indirect
 	github.com/PuerkitoBio/purell v1.1.0 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf // indirect
@@ -12,7 +12,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/docker/distribution v2.6.2+incompatible // indirect
-	github.com/emicklei/go-restful v0.0.0-20180823151430-858e58f
+	github.com/emicklei/go-restful v0.0.0-20161116140610-858e58f98abd
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-kit/kit v0.7.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
@@ -44,6 +44,7 @@ require (
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/miekg/dns v1.0.8 // indirect
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.0.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
@@ -59,7 +60,7 @@ require (
 	github.com/samuel/go-zookeeper v0.0.0-20180130194729-c4fab1ac1bec // indirect
 	github.com/sirupsen/logrus v1.0.6
 	github.com/spf13/pflag v1.0.2
-	github.com/ugorji/go v0.0.0-20180820150726-faddd61
+	github.com/ugorji/go v0.0.0-20160928015244-faddd6128c66
 	golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac // indirect
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect
 	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be // indirect
@@ -72,6 +73,8 @@ require (
 	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce // indirect
 	gopkg.in/yaml.v2 v2.2.1 // indirect
 	k8s.io/api v0.0.0-20180827053216-6b5087e25236 // indirect
-	k8s.io/apimachinery v0.0.0-20180823151430-75b8dd260ef0469d96d578705a87cffd0e09dab8
-	k8s.io/client-go v0.0.0-20180823151430-3627aeb7d4f6ade38f995d2c923e459146493c7e
+	k8s.io/apimachinery v0.0.0-20170321210947-75b8dd260ef0
+	k8s.io/client-go v0.0.0-20170331203426-3627aeb7d4f6
 )
+
+go 1.13

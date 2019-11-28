@@ -37,13 +37,15 @@ import (
 )
 
 var (
-	configFile string
-	outputFile string
+	configFile        string
+	outputFile        string
+	instancePrincipal bool
 )
 
 func init() {
 	flag.StringVarP(&configFile, "config-file", "c", "oci-sd.toml", "external config file")
 	flag.StringVarP(&outputFile, "output-file", "o", "oci-sd.json", "output file for file_sd compatible file")
+	flag.BoolVarP(&instancePrincipal, "instance", "i", false, "flag to use instance principals instead of keys")
 }
 
 func main() {

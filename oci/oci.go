@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"github.com/imdario/mergo"
 	"github.com/oracle/oci-go-sdk/common"
+	"github.com/oracle/oci-go-sdk/common/auth"
 	"github.com/oracle/oci-go-sdk/core"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
@@ -63,27 +64,30 @@ var defaultSDConfig = SDConfig{
 
 // SDConfig is the configuration for OCI based service discovery.
 type SDConfig struct {
-	User            string
-	FingerPrint     string
-	KeyFile         string
-	PassPhrase      string `toml:",omitempty"`
-	Tenancy         string
-	Region          string
-	Compartment     string
-	Port            int            `toml:",omitempty"`
-	RefreshInterval model.Duration `toml:",omitempty"`
+	User              string
+	FingerPrint       string
+	KeyFile           string
+	PassPhrase        string `toml:",omitempty"`
+	Tenancy           string
+	Region            string
+	Compartment       string
+	InstancePrincipal bool
+	Port              int            `toml:",omitempty"`
+	RefreshInterval   model.Duration `toml:",omitempty"`
 }
 
 // Validate function validates that the SDConfig struct contains all the mandatory fields
 func (c *SDConfig) Validate() error {
-	if c.User == "" {
-		return fmt.Errorf("oci sd configuration requires a user")
-	}
-	if c.FingerPrint == "" {
-		return fmt.Errorf("oci sd configuration requires a fingerprint")
-	}
-	if c.KeyFile == "" {
-		return fmt.Errorf("oci sd configuration requires a key file")
+        if c.InstancePrincipal == false {
+                if c.User == "" {
+			return fmt.Errorf("oci sd configuration requires a user")
+		}
+		if c.FingerPrint == "" {
+			return fmt.Errorf("oci sd configuration requires a fingerprint")
+		}
+		if c.KeyFile == "" {
+			return fmt.Errorf("oci sd configuration requires a key file")
+		}
 	}
 	if c.Tenancy == "" {
 		return fmt.Errorf("oci sd configuration requires a tenancy")
@@ -118,6 +122,7 @@ type Discovery struct {
 
 // NewDiscovery returns a new OCI discovery which periodically refreshes its targets.
 func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
+        var ociConfig common.ConfigurationProvider
 	if logger == nil {
 		logger = log.New()
 	}
@@ -125,14 +130,18 @@ func NewDiscovery(conf *SDConfig, logger *log.Logger) (*Discovery, error) {
 	if err != nil {
 		return nil, err
 	}
-	ociConfig := common.NewRawConfigurationProvider(
-		conf.Tenancy,
-		conf.User,
-		conf.Region,
-		conf.FingerPrint,
-		privateKey,
-		&conf.PassPhrase,
-	)
+        if conf.InstancePrincipal {
+                ociConfig, err = auth.InstancePrincipalConfigurationProvider()
+        } else {
+		ociConfig = common.NewRawConfigurationProvider(
+			conf.Tenancy,
+			conf.User,
+			conf.Region,
+			conf.FingerPrint,
+			privateKey,
+			&conf.PassPhrase,
+		)
+        }
 	return &Discovery{
 		sdConfig:  conf,
 		ociConfig: ociConfig,
